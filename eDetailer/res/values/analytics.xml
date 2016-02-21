@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ga_trackingId">UA-50787490-1</string>
+
+    <!-- Enable Activity tracking -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- Enable debug -->
+    <bool name="ga_debug">true</bool>
+    
+    
+    			<!-- Segment io -->
+    
+    
+	     <!--Your Segment project write key-->
+	  <string name="analytics_write_key">YOUR_WRITE_KEY</string>
+	
+	  <!--The maximum amount of analytics eve#nts to queue before dropping to conserve memory-->
+	  <integer name="analytics_max_queue_size">10000</integer>
+	
+	  <!--Whether to print additional debug information as you develop.-->
+	  <string name="analytics_debug">true</string>
+	
+	  <!--Flush to the server after receiving this many messages-->
+	  <integer name="analytics_flush_at">20</integer>
+	
+	  <!--Flush on a timer after this many milliseconds-->
+	  <integer name="analytics_flush_after">10000</integer>
+	
+	  <!--Refresh the Segment integration settings after this many milliseconds -->
+	  <integer name="analytics_settings_cache_expiry">3600000</integer>
+	
+	  <!--If available, send the device location to Segment. -->
+	  <integer name="analytics_send_location">1</integer>
+</resources>

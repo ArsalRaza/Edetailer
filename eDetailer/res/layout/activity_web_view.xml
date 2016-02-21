@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    	
+    	<RelativeLayout 
+    	    android:id="@+id/action_bar"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content"
+    	    android:background="@color/Black"
+    	    android:visibility="gone" >
+    	    <ImageView 
+    	        android:id="@+id/snape_taker"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:src="@drawable/snap_shot_image"
+    	        android:layout_alignParentRight="true"
+    	        android:layout_centerVertical="true"
+    	        android:layout_marginRight="@dimen/margin_10"
+    	        />
+
+    	    <ImageView
+    	        android:id="@+id/back_arrow"
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+				android:layout_marginLeft="@dimen/margin_10"
+				android:layout_centerVertical="true"
+    	        android:src="@drawable/back_arrow" />
+
+    	    <ImageView
+    	        android:id="@+id/app_icon"
+    	    	android:layout_width="wrap_content"
+    	    	android:layout_height="wrap_content"
+    	        android:layout_centerVertical="true"
+    	        android:layout_marginLeft="5dp"
+    	        android:layout_toRightOf="@+id/back_arrow"
+    	        android:src="@drawable/logo_top" />
+    	    
+    	</RelativeLayout>
+    	
+	<LinearLayout
+	    android:id="@+id/web_view_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:layout_below="@+id/action_bar" >
+	    
+	    <WebView
+		    android:id="@+id/web_view"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"/> 
+	</LinearLayout>
+	
+	<FrameLayout
+        android:id="@+id/pnlFlash"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
+        android:visibility="gone"
+        />
+	    
+</RelativeLayout>

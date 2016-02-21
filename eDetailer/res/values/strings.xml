@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<string name="app_name">eDetailer</string>
+	<string name="pdf_api_key">D5F5BE4F4G4574FFED342AAFG3E2GD4529997HHCB75E2H695E56FBF5</string>
+	
+	<!-- fragment home -->
+	<string name="download_button_text">download</string>
+	<string name="no_images_preview">No more images available for display</string>
+	<string name="saving">Saving data...</string>
+	
+	<!-- Dialog strings -->
+	<string name="install_slide_from_sd">Is the slide package exist on your external drive?</string>
+	
+	<!-- Activity Login -->
+	<string name="login">Login</string>
+	<string name="hint_for_email_address">Email address</string>
+	<string name="hint_password">Password</string>
+	
+</resources>

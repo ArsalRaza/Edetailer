@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_home_frag" >
+
+    <ImageView
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:alpha="0.3"
+        android:scaleType="fitXY"
+        android:src="@drawable/background_home_frag"
+        android:orientation="vertical" />
+    
+            <GridView
+            android:id="@+id/gridView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="3"       
+    		android:verticalSpacing="40dp"
+            android:paddingTop="@dimen/margin_30"
+            android:paddingLeft="90dp"
+            android:paddingRight="60dp"
+			android:stretchMode="columnWidth"/>
+<!--        		android:horizontalSpacing="30dp"       
+    		android:verticalSpacing="40dp" <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_30"
+        android:verticalSpacing="@dimen/margin_10"
+        android:horizontalSpacing="@dimen/margin_20"
+        android:numColumns="3" >
+    </GridView> -->
+	
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp"
+	    android:layout_alignParentBottom="true"
+	    android:background="@drawable/background_dialog"
+	    android:layout_marginBottom="5dp"
+	    android:orientation="horizontal"
+	    android:visibility="gone">
+
+		<Button
+		    android:id="@+id/download_home_frag"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="@dimen/margin_10"
+		    android:layout_marginTop="@dimen/margin_5"
+		    android:layout_marginBottom="@dimen/margin_5"
+    		android:background="@drawable/corner_views"
+		    android:text="@string/download_button_text" />
+	    
+	    </LinearLayout>
+</RelativeLayout>

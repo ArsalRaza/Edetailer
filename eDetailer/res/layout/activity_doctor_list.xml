@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:focusableInTouchMode="true">
+    	<RelativeLayout
+	    android:id="@+id/main_detailer_header"
+    	android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+    
+	    <ImageView
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:src="@drawable/detailer_main_header"
+	        android:scaleType="fitXY"/>
+	    	  	
+	    <ImageView
+	        android:id="@+id/make_call"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="@dimen/margin_10"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/ic_launcher_top"
+	        android:scaleType="fitXY"/>
+	    
+	 	<TextView 
+	 	    android:id="@+id/dash_title"
+		    android:layout_width="wrap_content"
+		  	android:layout_height="wrap_content"
+		  	android:text="SELECT DOCTOR"
+		   	android:textColor="@android:color/white"
+		   	android:textSize="@dimen/text_size_medium"
+		   	android:layout_centerInParent="true"/>
+	 	
+	    <ImageView
+	        android:id="@+id/title_img_imgview"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_toLeftOf="@id/dash_title"
+	        android:layout_marginRight="@dimen/margin_10"
+	        android:layout_centerVertical="true"
+	        android:src="@drawable/doctor_sync"
+	        android:scaleType="fitXY"/>
+	
+	</RelativeLayout>
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/activity_doctor_sync_edittext_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/main_detailer_header">
+		
+		<EditText
+		    android:id="@+id/activity_doctor_sync_edittext"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:ems="10"
+		    android:textColorHint="@android:color/black"
+		    android:hint="Doctor Name:"
+		    android:inputType="textPersonName">
+		</EditText>
+	
+	</android.support.design.widget.TextInputLayout>
+	
+	<ListView
+	    android:id="@+id/activity_doctor_listview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" 
+	    android:layout_below="@id/activity_doctor_sync_edittext_layout">
+
+	</ListView>
+	
+</RelativeLayout>

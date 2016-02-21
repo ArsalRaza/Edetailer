@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <!-- The duration (in milliseconds) of a one sec animation. -->
+    <integer name="config_one_second">1000</integer>
+
+	<!-- The duration (in milliseconds) of a one and half sec animation. -->
+    <integer name="config_one_and_half_second">1500</integer>
+    <integer name="config_half_second">300</integer>
+</resources>
