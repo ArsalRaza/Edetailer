@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,19 +63,24 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 	private TextView mSyncDoctorTxt;
 	private ImageView mDoctocSyncTick;
 	private TextView mContentSyncTextView;
+	private RelativeLayout mSyncBottomLayout;
+	private ImageView mSyncCloseImageView;
 	private static ArrayList<PresentationBean> mBrowseBeansList;
 	private static ArrayList<PresentationBean> mCreateBeansList;
 	public static ActivityDetailerMainTabs mTabActivity;
 	
-	public static ActivityDetailerMainTabs getInstance() {
+	public static ActivityDetailerMainTabs getInstance() 
+	{
 		return mTabActivity;
 	}
 	
-	public ArrayList<PresentationBean> getmCreateBeansList() {
+	public ArrayList<PresentationBean> getmCreateBeansList()
+	{
 		return mCreateBeansList;
 	}
 
-	public void setmCreateBeansList(ArrayList<PresentationBean> mCreateBeansList1) {
+	public void setmCreateBeansList(ArrayList<PresentationBean> mCreateBeansList1)
+	{
 		mCreateBeansList = mCreateBeansList1;
 	}
 	
@@ -86,7 +93,28 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 	{
 		mBrowseBeansList = mPreBeansList1;
 	}
-	
+//	@Override
+//    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//        	Log.e("asd", "asd");
+//        	return true;
+//        }
+//        return super.onKeyUp(keyCode, objEvent);
+//    }
+//	 @Override
+//	   public boolean onKeyDown(int keyCode, KeyEvent event) {
+//     	Log.e("asd", "asd");
+//		 
+//		 if (keyCode == KeyEvent.KEYCODE_BACK) {
+////			 onBackPressed();
+//		 }
+//		return false;
+//		 
+//	}
+	@Override
+	public void onBackPressed()
+	{
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -130,18 +158,21 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 		mTitleTextView = (TextView) findViewById(R.id.dash_title);
 		
 		mDoctocSyncTick = (ImageView) findViewById(R.id.main_detailer_header_doctor_sync_tick_img);
+		mSyncCloseImageView = (ImageView) findViewById(R.id.cross_sync_bottom_layout);
 		mSyncDoctor = (ImageView) findViewById(R.id.main_detailer_header_doctor_sync_btn);
 		mSyncDoctorTxt = (TextView) findViewById(R.id.main_detailer_header_doctor_sync_txt);
 		
 		mContentSyncTextView = (TextView) findViewById(R.id.main_detailer_header_sync_txt);
 		mLayoutForInflation = (LinearLayout) findViewById(R.id.layout_sync_edas);
+		mSyncBottomLayout = (RelativeLayout) findViewById(R.id.sync_bottom_layout);
+		
 		mMakeCall = (ImageView) findViewById(R.id.make_call);
 		
 		mMakeCall.setOnClickListener(this);
 		mSyncDoctor.setOnClickListener(this);
 		mSyncDoctorTxt.setOnClickListener(this);
 		mContentSyncTextView.setOnClickListener(this);
-	
+		mSyncCloseImageView.setOnClickListener(this);
 	}
 	
 	public void updateDataAfterSync(final ArrayList<DownloadPresentationBeans> beans)
@@ -149,14 +180,15 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 		mLayoutForInflation.removeAllViews();
 		if (beans.size() == 0)
 		{
-			mLayoutForInflation.setVisibility(View.GONE);
+			mSyncBottomLayout.setVisibility(View.GONE);
 			return;
 		}
 		else
 		{
-			mLayoutForInflation.setVisibility(View.VISIBLE);
+			mSyncBottomLayout.setVisibility(View.VISIBLE);
 			
 		}
+		
 		final boolean isHomeBean = mCurrentFragment instanceof HomeFragment;
 
 		if (isHomeBean) 
@@ -267,6 +299,10 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 	{
 		switch (v.getId())
 		{
+		case R.id.cross_sync_bottom_layout:
+			mSyncBottomLayout.setVisibility(View.GONE);
+			break;
+			
 		case R.id.main_detailer_header_doctor_sync_btn:
 		case R.id.main_detailer_header_doctor_sync_txt:
 			startActivityForResult(new Intent(this, ActivityDoctorList.class), COLLECT_DOCTOR_REQUEST_CODE);
@@ -357,7 +393,7 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 
 	private void tabPressed(int id) 
 	{
-		mLayoutForInflation.setVisibility(View.GONE);
+		mSyncBottomLayout.setVisibility(View.GONE);
 		
 		switch (id)
 		{
