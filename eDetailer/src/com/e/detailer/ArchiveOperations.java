@@ -12,18 +12,20 @@ import java.util.zip.ZipOutputStream;
 
 import android.util.Log;
 
-public class ArchiveOperations {
-	
+public class ArchiveOperations 
+{
 	private static final String TAG = "ArchiveOperations";
 	private final int BUFFER_SIZE = 4096;
 
-	public void zip(String[] files, String zipFile) throws IOException {
+	public void zip(String[] files, String zipFile) throws IOException
+	{
 	    BufferedInputStream origin = null;
 	    ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
-	    try { 
+	    try 
+	    { 
 	        byte data[] = new byte[BUFFER_SIZE];
-
-	        for (int i = 0; i < files.length; i++) {
+	        for (int i = 0; i < files.length; i++) 
+	        {
 	            FileInputStream fi = new FileInputStream(files[i]);    
 	            origin = new BufferedInputStream(fi, BUFFER_SIZE);
 	            try {
