@@ -1,7 +1,8 @@
 package com.e.detailer.activity;
 
 
-import java.util.List;
+import android.app.Activity;
+import android.os.Bundle;
 
 import com.e.detailer.DetailerConstants;
 //import com.epapyrus.plugpdf.SimpleDocumentReader;
@@ -22,14 +23,6 @@ import com.e.detailer.DetailerConstants;
 //import com.epapyrus.plugpdf.core.viewer.DocumentState.OPEN;
 //import com.google.code.microlog4android.Level;
 //import com.logdog.LogDog;
-
-import com.e.detailer.DetailerUtils;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.os.Bundle;
 
 public class PdfActivity extends Activity{
 

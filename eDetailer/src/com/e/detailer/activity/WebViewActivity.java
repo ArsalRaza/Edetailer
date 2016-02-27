@@ -60,16 +60,19 @@ public class WebViewActivity extends Activity implements OnClickListener {
 	}
 	
 	@Override
-	public void onDestroy(){
-		if (mPlayer != null){
+	public void onDestroy()
+	{
+		if (mPlayer != null)
+		{
 			mPlayer.stop();
 		}
+		mWebView.loadUrl("javascript:requestForJson();");
 		super.onDestroy();
 	}
 	
 	@Override
-	public void onBackPressed() {
-//		super.onBackPressed();
+	public void onBackPressed()
+	{
 		new AlertDialog
 		.Builder(WebViewActivity.this)
 		.setTitle(getString(R.string.app_name))
@@ -93,8 +96,8 @@ public class WebViewActivity extends Activity implements OnClickListener {
 		}).create().show();
 	}
 	
-	private void InitUI() {
-	
+	private void InitUI()
+	{
 		ImageView screenShotImageView = (ImageView) findViewById(R.id.snape_taker);
 		ImageView appIcon = (ImageView) findViewById(R.id.app_icon);
 		ImageView backArrowImageView = (ImageView) findViewById(R.id.back_arrow);
@@ -104,9 +107,12 @@ public class WebViewActivity extends Activity implements OnClickListener {
 		backArrowImageView.setOnClickListener(this);
 		screenShotImageView.setOnClickListener(this);
 	
-		if (isSlideFirstLaunch()){
-			LoadWebView();//new MakeWebAppResponsive(this, urlForWebView).execute();
-		}else{
+		if (isSlideFirstLaunch())
+		{
+			LoadWebView();
+		}
+		else
+		{
 			LoadWebView();
 		}
 	

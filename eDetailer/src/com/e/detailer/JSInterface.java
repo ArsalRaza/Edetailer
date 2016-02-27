@@ -27,4 +27,9 @@ public class JSInterface
 		intent.putExtra(DetailerConstants.VIDEO_VIEW_URL_KEY, mVideoUrl);
 		mActivity.startActivity(intent);	
 	}
+	
+	@JavascriptInterface
+	public void onEDALogObtained(String logs)
+	{
+	}
 }
