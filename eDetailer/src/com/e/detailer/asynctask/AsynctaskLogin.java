@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import com.e.detailer.DetailerConstants;
 import com.e.detailer.DetailerUtils;
 import com.e.detailer.activity.ActivityDetailerMainTabs;
-import com.e.detailer.activity.ActivityDoctorList;
 import com.e.detailer.network.GetPostSender;
 
 public class AsynctaskLogin extends AsyncTask<String, Void, String> {

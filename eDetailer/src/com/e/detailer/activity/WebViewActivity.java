@@ -3,6 +3,10 @@ package com.e.detailer.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,27 +38,31 @@ import com.e.detailer.DetailerConstants;
 import com.e.detailer.DetailerUtils;
 import com.e.detailer.JSInterface;
 
-public class WebViewActivity extends Activity implements OnClickListener {
-	
+public class WebViewActivity extends Activity implements OnClickListener
+{
 	private String urlForWebView = "";
 	public static List<String> mUriList;
 	private WebView mWebView;
 	private FrameLayout frameLayout;
 	private MediaPlayer mPlayer;
+	private String mEdaTitle;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_web_view);
-	        
-		if (!getIntent().hasExtra(DetailerConstants.WEB_VIEW_URL_KEY)){
+	    
+		if (!getIntent().hasExtra(DetailerConstants.WEB_VIEW_URL_KEY))
+		{
 	    	finish();
-	    }
+	    	return;
+		}
 		urlForWebView  = getIntent().getExtras().getString(DetailerConstants.WEB_VIEW_URL_KEY);
+		mEdaTitle = getIntent().getExtras().getString(DetailerConstants.WEB_VIEW_EDA_TITLE);
 		InitUI();
 
 	}
@@ -66,6 +74,7 @@ public class WebViewActivity extends Activity implements OnClickListener {
 		{
 			mPlayer.stop();
 		}
+		//!-- get analytic details from hybrid
 		mWebView.loadUrl("javascript:requestForJson();");
 		super.onDestroy();
 	}
@@ -127,7 +136,8 @@ public class WebViewActivity extends Activity implements OnClickListener {
 	private Activity getActivity() {
 		return this;
 	}
-
+	private String mStartTime;
+	
 	@SuppressLint("JavascriptInterface")
 	@SuppressWarnings("deprecation")
 	public void LoadWebView() {
@@ -146,6 +156,7 @@ public class WebViewActivity extends Activity implements OnClickListener {
 					if(mDialog.isShowing()){
 						mDialog.dismiss();
 					}
+					mStartTime = DetailerUtils.getCurrentDate(DetailerConstants.DATE_FORMAT);
 				}
 			};
 			WebChromeClient webChromeClient = new WebChromeClient()
@@ -201,14 +212,13 @@ public class WebViewActivity extends Activity implements OnClickListener {
 		}else if (v.getId() == R.id.back_arrow) {
 			((LinearLayout) findViewById(R.id.web_view_layout)).removeView(mWebView);
 			finish();
-		
 		}
 		
 	}
    
-	private void takeSlideShot() {
+	private void takeSlideShot()
+	{
 		playSound();
-		
 		frameLayout.setVisibility(View.VISIBLE);
 		
 		AlphaAnimation fade = new AlphaAnimation(1, 0);
@@ -234,7 +244,8 @@ public class WebViewActivity extends Activity implements OnClickListener {
 		new SaveBitmapToFileThread(DetailerUtils.getBitmapScreenshot(mWebView)).start();
 	}
 	
-	private void playSound() {
+	private void playSound()
+	{
 		mPlayer = MediaPlayer.create(this, R.raw.camera_screen_shot);
 		mPlayer.start();
 	}
@@ -259,5 +270,25 @@ public class WebViewActivity extends Activity implements OnClickListener {
 			addImageToArray(pathString);
 		}
 	}
-	
+
+	public void onLogsObtained(String logs) 
+	{
+		String mEndTime = DetailerUtils.getCurrentDate(DetailerConstants.DATE_FORMAT);
+		JSONObject edaSession = new JSONObject();
+		try
+		{
+			edaSession.put("StartTime", mStartTime);
+			edaSession.put("EndTime", mEndTime);
+			edaSession.put("Title", mEdaTitle);
+			edaSession.put("EDALogs", new JSONArray(logs));
+			
+			if (ActivityDetailerMainTabs.IS_CALL_STARTED)
+				ActivityDetailerMainTabs.mEdaSessionList.put(edaSession);
+			
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

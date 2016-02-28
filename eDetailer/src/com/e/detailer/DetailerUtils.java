@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -57,6 +59,11 @@ public class DetailerUtils{
 		}
 	}
 	
+	public static String getCurrentDate(String format)
+	{
+		return new SimpleDateFormat(format).format(Calendar.getInstance().getTime());
+	}
+
 	public static String getMacAddress(Context context) 
 	{
 		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -319,5 +326,12 @@ public class DetailerUtils{
 		{
 			e.printStackTrace();
 		}
+	}
+	public static String getDeviceMacAddress(Activity activity)
+	{
+		WifiManager manager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+		WifiInfo info = manager.getConnectionInfo();
+		String address = info.getMacAddress();
+		return address;
 	}
 }

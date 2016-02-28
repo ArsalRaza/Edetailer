@@ -68,4 +68,12 @@ public class DetailerConstants
 	public static final String GET_ALL_DOCTORS = "doctor";
 
 	public static final String DOCTORS_JSON = "DOCTORS_JSON";
+
+	public static final String WEB_VIEW_EDA_TITLE = "WEB_VIEW_EDA_TITLE";
+
+	public static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
+
+	public static final String LAST_ANALYTICS_KEY = "LAST_ANALYTICS_KEY";
+
+	public static final String SYNC_ANALYTICS = "EDALogSync";
 }

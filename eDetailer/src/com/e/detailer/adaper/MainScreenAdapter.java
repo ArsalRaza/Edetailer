@@ -72,7 +72,7 @@ public class MainScreenAdapter extends BaseAdapter implements OnClickListener {
 		final ViewHolder holder;
 		if (convertView == null)
 		{
-			v = layoutInflater.inflate(R.layout.single_grid_home_frag, null);
+			v = layoutInflater.inflate(R.layout.single_grid_home_frag, parent, false);
 		}
 		holder = new ViewHolder();
 		holder.mPresentationImage = (ImageView) v.findViewById(R.id.image_button_single_grid);
@@ -143,6 +143,7 @@ public class MainScreenAdapter extends BaseAdapter implements OnClickListener {
 		if (mFrom == DetailerConstants.HOME_FRAGMENT_ID){
 			//For Home Click Listener
 			Intent homeIntent = new Intent(mActivity, WebViewActivity.class);
+			homeIntent.putExtra(DetailerConstants.WEB_VIEW_EDA_TITLE, preBeanList.get(pos).getName());
 			homeIntent.putExtra(DetailerConstants.WEB_VIEW_URL_KEY, preBeanList.get(pos).getmIndexFilePath());
 			mActivity.startActivity(homeIntent);
 		}else

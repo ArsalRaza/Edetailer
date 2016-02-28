@@ -102,7 +102,7 @@
 	        android:scaleType="fitXY"/>
 	    	  	
 	    <ImageView
-	        android:id="@+id/make_call"
+	        android:id="@+id/logo_top"
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
 	        android:layout_alignParentRight="true"
@@ -111,7 +111,33 @@
 	        android:src="@drawable/ic_launcher_top"
 	        android:scaleType="fitXY"/>
 	    
-	
+		<TextView
+	        android:id="@+id/make_call"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_toRightOf="@id/dash_title"
+	        android:layout_marginLeft="100dp"
+		   	android:textSize="@dimen/text_size_medium"
+		   	android:drawablePadding="@dimen/margin_5"
+		   	android:gravity="center"
+		   	android:drawableLeft="@drawable/analytic_start"
+	        android:layout_centerVertical="true"
+	        android:textColor="@android:color/white"
+	        android:text="START"/>
+		
+ 		<TextView
+	        android:id="@+id/sync_analytics_to_server"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_toRightOf="@id/make_call"
+	        android:layout_marginLeft="100dp"
+		   	android:textSize="@dimen/text_size_medium"
+	        android:layout_centerVertical="true"
+	        android:textColor="@android:color/white"
+	        android:gravity="center"
+		   	android:drawablePadding="@dimen/margin_10"
+		   	android:drawableLeft="@drawable/analytic_sync"
+	        android:text="SYNC SERVER"/>
 	</RelativeLayout>
     
     <FrameLayout

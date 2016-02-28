@@ -2,6 +2,10 @@ package com.e.detailer.activity;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -23,8 +28,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.e.detailer.DetailerConstants;
+import com.e.detailer.DetailerUtils;
 import com.e.detailer.PresentationBean;
 import com.e.detailer.asynctask.AsynctaskGetContent;
+import com.e.detailer.asynctask.AsynctaskSyncAnalyticsWithServer;
 import com.e.detailer.asynctask.DownloadPresentationAsyncTask;
 import com.e.detailer.beans.DownloadPresentationBeans;
 import com.e.detailer.fragment.HomeFragment;
@@ -35,6 +42,7 @@ import com.squareup.picasso.Callback;
 public class ActivityDetailerMainTabs extends FragmentActivity implements OnClickListener
 {
 	private static final int COLLECT_DOCTOR_REQUEST_CODE = 999;
+	public static boolean IS_CALL_STARTED = false;
 	private FragmentManager mFragmentManagerObject;
 	private Fragment mCurrentFragment;
 	private HomeFragment mHomeFragment;
@@ -56,16 +64,20 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 	private ArrayList<PresentationBean> mVideoBeans;
 	private ArrayList<DownloadPresentationBeans> mServerBeans;
 	private ArrayList<DownloadPresentationBeans> mServerVideoContent;
-	private ImageView mMakeCall;
+	private TextView mMakeCall;
 	private ImageView mSyncDoctor;
 	private TextView mSyncDoctorTxt;
 	private ImageView mDoctocSyncTick;
 	private TextView mContentSyncTextView;
 	private RelativeLayout mSyncBottomLayout;
 	private ImageView mSyncCloseImageView;
+	private String mStartTime;
+	private JSONArray mCallList;
+	private TextView mSyncAnalyticsToServer;
 	private static ArrayList<PresentationBean> mBrowseBeansList;
 	private static ArrayList<PresentationBean> mCreateBeansList;
 	public static ActivityDetailerMainTabs mTabActivity;
+	public static JSONArray mEdaSessionList;
 	
 	public static ActivityDetailerMainTabs getInstance() 
 	{
@@ -91,28 +103,7 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 	{
 		mBrowseBeansList = mPreBeansList1;
 	}
-//	@Override
-//    public boolean onKeyUp(int keyCode, KeyEvent objEvent) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//        	Log.e("asd", "asd");
-//        	return true;
-//        }
-//        return super.onKeyUp(keyCode, objEvent);
-//    }
-//	 @Override
-//	   public boolean onKeyDown(int keyCode, KeyEvent event) {
-//     	Log.e("asd", "asd");
-//		 
-//		 if (keyCode == KeyEvent.KEYCODE_BACK) {
-////			 onBackPressed();
-//		 }
-//		return false;
-//		 
-//	}
-	@Override
-	public void onBackPressed()
-	{
-	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -126,6 +117,19 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 		mMOAFragment = new MOFFragment();
 		mProgramFragment = new ProgramFragment();
 		
+		mEdaSessionList = new JSONArray();
+		
+		String lastStoredAnalytics = DetailerApplication.getmAppPreferences().getString(DetailerConstants.LAST_ANALYTICS_KEY, "[]"); 
+		try 
+		{
+			mCallList = new JSONArray(lastStoredAnalytics);
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			mCallList = new JSONArray();
+		}
+
 		initIU();
 		
 		String doctor = DetailerApplication.getmAppPreferences().getString(DetailerConstants.DOCTORS_JSON, "");
@@ -135,6 +139,11 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 		{
 			mDoctocSyncTick.setVisibility(View.VISIBLE);
 			mSyncDoctorTxt.setText("CHANGE DOCTOR");
+		}
+		
+		if (mCallList.length() != 0)
+		{
+			mMakeCall.performClick();
 		}
 	}
 	
@@ -164,9 +173,11 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 		mLayoutForInflation = (LinearLayout) findViewById(R.id.layout_sync_edas);
 		mSyncBottomLayout = (RelativeLayout) findViewById(R.id.sync_bottom_layout);
 		
-		mMakeCall = (ImageView) findViewById(R.id.make_call);
+		mMakeCall = (TextView) findViewById(R.id.make_call);
+		mSyncAnalyticsToServer = (TextView) findViewById(R.id.sync_analytics_to_server);
 		
 		mMakeCall.setOnClickListener(this);
+		mSyncAnalyticsToServer.setOnClickListener(this);
 		mSyncDoctor.setOnClickListener(this);
 		mSyncDoctorTxt.setOnClickListener(this);
 		mContentSyncTextView.setOnClickListener(this);
@@ -209,8 +220,8 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 			mTextView.setText(beans.get(i).getmNameString());
 			setContentView(beans.get(i).getMmImageString(), imageView, progressBar);
 			view.setTag(i);
-			view.setOnClickListener(new View.OnClickListener() {
-				
+			view.setOnClickListener(new View.OnClickListener()
+			{
 				@Override
 				public void onClick(View v) 
 				{
@@ -225,8 +236,8 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 	
 	private void setContentView(String url, ImageView mFirstImageView, final ProgressBar progressBar) 
 	{
-		DetailerApplication.getmCacheManager().load(Uri.parse(url)).fit().into(mFirstImageView, new Callback(){
-
+		DetailerApplication.getmCacheManager().load(Uri.parse(url)).fit().into(mFirstImageView, new Callback()
+		{
 			@Override
 			public void onError() 
 			{
@@ -234,10 +245,11 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 			}
 
 			@Override
-			public void onSuccess() 
+			public void onSuccess()
 			{
 				progressBar.setVisibility(View.GONE);
-			}});
+			}
+		});
 	}
 	
 	private void InitBotttomLayout()
@@ -273,7 +285,52 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 			mFragmentManagerObject.beginTransaction().replace(R.id.content_frame, mCurrentFragment).commitAllowingStateLoss();
 		}
 	}
-	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		if (mCallList.length() != 0)
+		{
+			if (IS_CALL_STARTED)
+			{
+				IS_CALL_STARTED = false;
+				String mEndTime = DetailerUtils.getCurrentDate(DetailerConstants.DATE_FORMAT);
+				
+				JSONObject callJsonObject = new JSONObject();
+				try
+				{
+					String doctorJson = DetailerApplication.getmAppPreferences().getString(DetailerConstants.DOCTORS_JSON, "");
+					String doctorIdString = "";
+					try
+					{
+						if (!doctorJson.equalsIgnoreCase(""))
+						{
+							JSONObject doctorJsonObject = new JSONObject(doctorJson);
+							doctorIdString = doctorJsonObject.getString("id");
+						}
+					}
+					catch (Exception exception)
+					{
+						exception.printStackTrace();
+					}
+					
+					callJsonObject.put("DoctorId", doctorIdString);
+					callJsonObject.put("MACAddress", DetailerUtils.getDeviceMacAddress(ActivityDetailerMainTabs.this));
+					callJsonObject.put("StartTime", mStartTime);
+					callJsonObject.put("UserId", PreferenceManager.getDefaultSharedPreferences(this).getString(DetailerConstants.TEAM_ID_KEY, ""));
+					callJsonObject.put("EDASessions", mEdaSessionList);
+					callJsonObject.put("EndTime", mEndTime);
+					
+					mCallList.put(callJsonObject);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+			DetailerApplication.getmAppPrefEditor().putString(DetailerConstants.LAST_ANALYTICS_KEY, mCallList.toString()).commit();
+		}
+	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
@@ -306,7 +363,66 @@ public class ActivityDetailerMainTabs extends FragmentActivity implements OnClic
 			startActivityForResult(new Intent(this, ActivityDoctorList.class), COLLECT_DOCTOR_REQUEST_CODE);
 			break;
 			
+		case R.id.sync_analytics_to_server:
+			if (IS_CALL_STARTED == false)
+			{
+				JSONObject mainCallJsonObject = new JSONObject();
+				try
+				{
+					mainCallJsonObject.put("Calls", mCallList);
+				}
+				catch (JSONException e1)
+				{
+					e1.printStackTrace();
+				}
+				mCallList = new JSONArray();
+				mEdaSessionList = new JSONArray();
+				new AsynctaskSyncAnalyticsWithServer(ActivityDetailerMainTabs.this, mainCallJsonObject).execute();
+			}
+			else
+			{
+				DetailerUtils.showMsgDialog(this, "", "Please the current running call first...!", null);
+			}
+			break;
+		
+		//!-- Make Call
 		case R.id.make_call:
+			//!-- check for any previous call
+			TextView button = (TextView) v; 
+			if (button.getText().toString().equalsIgnoreCase("start"))
+			{
+				//!--- Start
+				button.setText("STOP");
+				button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.analytic_stop), null, null, null);
+				IS_CALL_STARTED = true;
+				mStartTime = DetailerUtils.getCurrentDate(DetailerConstants.DATE_FORMAT);
+				mEdaSessionList = new JSONArray();
+			}
+			else
+			{
+				//!--- Stop
+				button.setText("START");
+				IS_CALL_STARTED = false;
+				button.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.analytic_start), null, null, null);
+				String mEndTime = DetailerUtils.getCurrentDate(DetailerConstants.DATE_FORMAT);
+				
+				JSONObject callJsonObject = new JSONObject();
+				try
+				{
+					callJsonObject.put("DoctorId", "1");
+					callJsonObject.put("MACAddress", DetailerUtils.getDeviceMacAddress(ActivityDetailerMainTabs.this));
+					callJsonObject.put("StartTime", mStartTime);
+					callJsonObject.put("UserId", PreferenceManager.getDefaultSharedPreferences(this).getString(DetailerConstants.TEAM_ID_KEY, ""));
+					callJsonObject.put("EDASessions", mEdaSessionList);
+					callJsonObject.put("EndTime", mEndTime);
+					
+					mCallList.put(callJsonObject);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
 			break;
 	
 		case R.id.home_frag:
